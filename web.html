@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova — Modern Web</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #070711;
+      --text: #ffffff;
+      --muted: #a7a7b7;
+      --card: rgba(255, 255, 255, 0.07);
+      --border: rgba(255, 255, 255, 0.12);
+      --primary: #8b5cf6;
+      --secondary: #06b6d4;
+    }
+
+    body.light {
+      --bg: #f4f4ff;
+      --text: #151525;
+      --muted: #5f6070;
+      --card: rgba(255, 255, 255, 0.65);
+      --border: rgba(0, 0, 0, 0.1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      transition: 0.4s ease;
+    }
+
+    /* Background blobs */
+    .blob {
+      position: fixed;
+      width: 350px;
+      height: 350px;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.35;
+      z-index: -1;
+      animation: float 8s infinite alternate ease-in-out;
+    }
+
+    .blob.one {
+      background: #7c3aed;
+      top: -100px;
+      left: -100px;
+    }
+
+    .blob.two {
+      background: #06b6d4;
+      right: -100px;
+      top: 40%;
+      animation-delay: 2s;
+    }
+
+    @keyframes float {
+      from {
+        transform: translate(0, 0);
+      }
+      to {
+        transform: translate(80px, 60px);
+      }
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(1100px, 90%);
+      padding: 15px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(20, 20, 35, 0.65);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #a78bfa, #22d3ee);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    nav ul {
+      display: flex;
+      gap: 25px;
+      list-style: none;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      opacity: 0.8;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      opacity: 1;
+      color: #a78bfa;
+    }
+
+    .theme-btn {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 20px 80px;
+    }
+
+    .hero-content {
+      max-width: 850px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      backdrop-filter: blur(15px);
+      border-radius: 50px;
+      color: #c4b5fd;
+      font-size: 13px;
+      margin-bottom: 25px;
+    }
+
+    h1 {
+      font-size: clamp(50px, 9vw, 100px);
+      line-height: 0.95;
+      letter-spacing: -5px;
+      margin-bottom: 30px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(
+        90deg,
+        #8b5cf6,
+        #06b6d4,
+        #ec4899
+      );
+      background-size: 200%;
+      -webkit-background-clip: text;
+      color: transparent;
+      animation: gradient 5s infinite alternate;
+    }
+
+    @keyframes gradient {
+      from {
+        background-position: left;
+      }
+      to {
+        background-position: right;
+      }
+    }
+
+    .hero p {
+      max-width: 650px;
+      margin: auto;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .buttons {
+      margin-top: 35px;
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 15px 25px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, #7c3aed, #06b6d4);
+      box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+    }
+
+    .btn-secondary {
+      color: var(--text);
+      border: 1px solid var(--border);
+      background: var(--card);
+      backdrop-filter: blur(15px);
+    }
+
+    .btn:hover {
+      transform: translateY(-4px);
+    }
+
+    /* Sections */
+    section {
+      padding: 100px 20px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-title h2 {
+      font-size: 45px;
+      margin-bottom: 12px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+    }
+
+    /* Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      padding: 35px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      backdrop-filter: blur(20px);
+      border-radius: 25px;
+      transition: 0.4s;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      border-color: rgba(139, 92, 246, 0.6);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    }
+
+    .icon {
+      width: 55px;
+      height: 55px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      font-size: 25px;
+      margin-bottom: 25px;
+      background: linear-gradient(
+        135deg,
+        rgba(139, 92, 246, 0.3),
+        rgba(6, 182, 212, 0.3)
+      );
+    }
+
+    .card h3 {
+      margin-bottom: 12px;
+      font-size: 22px;
+    }
+
+    .card p {
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .stat {
+      text-align: center;
+      padding: 30px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card);
+    }
+
+    .stat h3 {
+      font-size: 38px;
+      color: #a78bfa;
+    }
+
+    .stat p {
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    /* Contact */
+    .contact-box {
+      max-width: 700px;
+      margin: auto;
+      padding: 45px;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      backdrop-filter: blur(20px);
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      outline: none;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .submit {
+      width: 100%;
+      border: none;
+      cursor: pointer;
+      color: white;
+      padding: 15px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #7c3aed, #06b6d4);
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    /* Scroll animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: 0.8s ease;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive */
+    @media (max-width: 800px) {
+      nav ul {
+        display: none;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      h1 {
+        letter-spacing: -3px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-box {
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="blob one"></div>
+  <div class="blob two"></div>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">NOVA</div>
+
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <button class="theme-btn" onclick="toggleTheme()">☀️</button>
+  </nav>
+
+  <!-- Hero -->
+  <header class="hero" id="home">
+    <div class="hero-content">
+
+      <span class="badge">✨ Welcome to the future</span>
+
+      <h1>
+        Build something
+        <span class="gradient-text">beautiful.</span>
+      </h1>
+
+      <p>
+        A modern, elegant and responsive website template designed
+        to make your next project look extraordinary.
+      </p>
+
+      <div class="buttons">
+        <a href="#features" class="btn btn-primary">
+          Explore Features →
+        </a>
+
+        <a href="#contact" class="btn btn-secondary">
+          Get Started
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Features -->
+  <section id="features">
+
+    <div class="section-title reveal">
+      <h2>Powerful Features</h2>
+      <p>Everything you need to create an amazing experience.</p>
+    </div>
+
+    <div class="cards">
+
+      <div class="card reveal">
+        <div class="icon">⚡</div>
+        <h3>Lightning Fast</h3>
+        <p>
+          Optimized layouts and lightweight code deliver
+          a smooth and fast browsing experience.
+        </p>
+      </div>
+
+      <div class="card reveal">
+        <div class="icon">🎨</div>
+        <h3>Beautiful Design</h3>
+        <p>
+          Glassmorphism, gradients, animations and modern
+          typography create a premium visual experience.
+        </p>
+      </div>
+
+      <div class="card reveal">
+        <div class="icon">📱</div>
+        <h3>Fully Responsive</h3>
+        <p>
+          Your website automatically adapts to phones,
+          tablets and desktop screens.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+
+    <div class="section-title reveal">
+      <h2>Made for the Web</h2>
+      <p>Simple technology. Beautiful results.</p>
+    </div>
+
+    <div class="stats">
+
+      <div class="stat reveal">
+        <h3>99%</h3>
+        <p>Performance</p>
+      </div>
+
+      <div class="stat reveal">
+        <h3>24/7</h3>
+        <p>Availability</p>
+      </div>
+
+      <div class="stat reveal">
+        <h3>100+</h3>
+        <p>Components</p>
+      </div>
+
+      <div class="stat reveal">
+        <h3>∞</h3>
+        <p>Possibilities</p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+
+    <div class="section-title reveal">
+      <h2>Let's Create</h2>
+      <p>Have an idea? Let's turn it into reality.</p>
+    </div>
+
+    <div class="contact-box reveal">
+
+      <form onsubmit="sendMessage(event)">
+
+        <input
+          type="text"
+          placeholder="Your Name"
+          required
+        >
+
+        <input
+          type="email"
+          placeholder="Your Email"
+          required
+        >
+
+        <textarea
+          placeholder="Tell us about your idea..."
+          required
+        ></textarea>
+
+        <button class="submit" type="submit">
+          Send Message 🚀
+        </button>
+
+      </form>
+
+    </div>
+
+  </section>
+
+  <footer>
+    © 2026 Nova. Crafted with ✨ and code.
+  </footer>
+
+  <script>
+
+    // Dark / Light mode
+    function toggleTheme() {
+      document.body.classList.toggle("light");
+
+      const button = document.querySelector(".theme-btn");
+
+      button.textContent =
+        document.body.classList.contains("light")
+          ? "🌙"
+          : "☀️";
+    }
+
+    // Scroll reveal animation
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("active");
+          }
+        });
+      },
+      {
+        threshold: 0.15
+      }
+    );
+
+    document.querySelectorAll(".reveal")
+      .forEach(element => observer.observe(element));
+
+    // Demo contact form
+    function sendMessage(event) {
+      event.preventDefault();
+
+      alert("✨ Thanks! Your message has been received.");
+
+      event.target.reset();
+    }
+
+  </script>
+
+</body>
+</html>
