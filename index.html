@@ -548,17 +548,20 @@
 
         <input
           type="text"
+          name="name"
           placeholder="Your Name"
           required
         >
 
         <input
           type="email"
+          name="email"
           placeholder="Your Email"
           required
         >
 
         <textarea
+          name="message"
           placeholder="Tell us about your idea..."
           required
         ></textarea>
@@ -608,13 +611,37 @@
     document.querySelectorAll(".reveal")
       .forEach(element => observer.observe(element));
 
-    // Demo contact form
-    function sendMessage(event) {
+    // Contact form — saves the message to the database
+    async function sendMessage(event) {
       event.preventDefault();
 
-      alert("✨ Thanks! Your message has been received.");
+      const form = event.target;
+      const button = form.querySelector(".submit");
+      const data = Object.fromEntries(new FormData(form));
 
-      event.target.reset();
+      button.disabled = true;
+      button.textContent = "Sending...";
+
+      try {
+        const res = await fetch("/api/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          throw new Error(result.error || "Something went wrong");
+        }
+
+        alert("✨ Thanks! Your message has been received.");
+        form.reset();
+      } catch (err) {
+        alert("⚠️ " + err.message);
+      } finally {
+        button.disabled = false;
+        button.textContent = "Send Message 🚀";
+      }
     }
 
   </script>
